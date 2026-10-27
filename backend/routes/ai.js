@@ -16,6 +16,21 @@ const getGenAI = () => {
   return new GoogleGenerativeAI(apiKey);
 };
 
+const AI_MODELS = ['gemini-3.8-flash', 'gemini-3.1-pro-preview', 'gemini-3.5-flash'];
+
+const generateAIWithFallback = async (genAI, payload, options = {}) => {
+  let lastErr = null;
+  for (const mName of AI_MODELS) {
+    try {
+      const model = genAI.getGenerativeModel({ model: mName, ...options });
+      return await model.generateContent(payload);
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw lastErr;
+};
+
 /**
  * Helper to call Tavily Web Search API
  */
@@ -80,7 +95,6 @@ router.post('/live-search', async (req, res) => {
       : 'No live web search API key configured; rely on verified government knowledge base.';
 
     // 2. Synthesize with Gemini
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
     const prompt = `
 You are NagarikSaathi's expert Indian Government Scheme Matcher and Policy Analyst.
 Analyze the user's need against verified government welfare schemes.
@@ -119,7 +133,7 @@ Return strictly a valid JSON object matching this schema (no markdown formatting
 }
 `;
 
-    const result = await model.generateContent(prompt);
+    const result = await generateAIWithFallback(genAI, prompt);
     let text = result.response.text().trim();
 
     if (text.startsWith('```json')) {
@@ -162,8 +176,6 @@ router.post('/extract-rule', upload.single('document'), async (req, res) => {
     if (!genAI) {
       return res.status(503).json({ error: 'Gemini API is not configured on the server.' });
     }
-
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
 
     let contentsPayload;
     if (req.file) {
@@ -230,7 +242,7 @@ Extract the scheme into strictly valid JSON matching this schema without markdow
       ? [...contentsPayload, extractionPrompt]
       : contentsPayload + '\n' + extractionPrompt;
 
-    const result = await model.generateContent(finalContents);
+    const result = await generateAIWithFallback(genAI, finalContents);
     let rawText = result.response.text().trim();
 
     if (rawText.startsWith('```json')) {
@@ -290,7 +302,6 @@ router.post('/intent-parse', async (req, res) => {
       return res.status(503).json({ error: 'Gemini API not configured.' });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
     const prompt = `
 Extract the citizen's needs from this query into strictly valid JSON without markdown fences:
 Query: "${query}"
@@ -306,7 +317,7 @@ JSON Schema:
 }
 `;
 
-    const result = await model.generateContent(prompt);
+    const result = await generateAIWithFallback(genAI, prompt);
     let text = result.response.text().trim();
     if (text.startsWith('```json')) text = text.replace(/^```json\s*/i, '').replace(/\s*```$/, '').trim();
     else if (text.startsWith('```')) text = text.replace(/^```\s*/, '').replace(/\s*```$/, '').trim();
