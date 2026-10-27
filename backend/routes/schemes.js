@@ -17,6 +17,7 @@ const getAllSchemes = async () => {
     return cachedSchemes;
   }
   if (mongoose.connection.readyState === 1) {
+    try {
       const dbFetchPromise = Scheme.find({}).lean().exec();
       dbFetchPromise.catch(() => {}); // Prevent unhandled rejection if race times out
       const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Atlas query timeout')), 2500));

@@ -1,0 +1,21 @@
+{
+  "name": "nagarik-saathi",
+  "version": "1.0.0",
+  "description": "NagarikSaathi - AI-Powered Government Scheme Discovery & Last-Mile Application Fulfillment Engine",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix frontend install && npm --prefix frontend run build && npm --prefix backend install",
+    "start": "node backend/server.js",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev"
+  },
+  "keywords": [
+    "digital-india",
+    "welfare-schemes",
+    "gemini-ai",
+    "dpi",
+    "rag"
+  ],
+  "author": "Tamanna Verma",
+  "license": "MIT"
+}
