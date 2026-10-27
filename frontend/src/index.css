@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:wght@100..900&family=Outfit:wght@100..900&display=swap');
+
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #f8fafc; /* slate-50 */
+    color: #1e293b; /* slate-800 */
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+  }
+}
+
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+}
+
+/* Smooth custom scrollbars for chat */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Custom Print Styles */
+@media print {
+  /* Reset page margins and dimensions */
+  @page {
+    margin: 12mm 15mm;
+    size: auto;
+  }
+
+  html, body, #root {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    width: 100% !important;
+  }
+
+  /* Reset flex containers and layout locks to allow natural print flow */
+  .flex,
+  .flex-col,
+  .flex-1,
+  .min-w-0,
+  .h-screen,
+  main,
+  .overflow-hidden,
+  .overflow-y-auto {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    display: block !important;
+    position: static !important;
+  }
+
+  /* Hide navigation, sidebar, header, action buttons, and non-printable elements */
+  header,
+  aside,
+  nav,
+  button,
+  .no-print {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Display elements marked specifically for print output */
+  .print-only,
+  .print\:flex {
+    display: flex !important;
+    visibility: visible !important;
+  }
+
+  .print-only-block {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Ensure the printable container displays cleanly across print pages */
+  .print-container {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 1rem !important;
+    color: #0f172a !important;
+    background-color: #ffffff !important;
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  /* Prevent awkward page breaks inside cards */
+  .print-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 0.5rem !important;
+    padding: 1.5rem !important;
+    background-color: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  .print-badge {
+    border: 1px solid #475569 !important;
+    color: #0f172a !important;
+    background: #f8fafc !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Ensure background colors and borders are preserved when printing */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+}
+
